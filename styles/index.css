@@ -1,0 +1,11 @@
+.folder {
+  border: 1px solid cornflowerblue;
+}
+
+h3 {
+  border: 1px solid chartreuse;
+}
+
+img {
+  max-width: 220px;
+}
