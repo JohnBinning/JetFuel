@@ -3,15 +3,25 @@
   <head>
     <meta charset="utf-8">
     <title>jetFuel</title>
+    <link href="https://fonts.googleapis.com/css?family=Chango|Oswald" rel="stylesheet">
     <link href='./styles/index.css' rel='stylesheet' type='text/css'>
   </head>
   <body>
     <header>
-      jetFuel
-    <header>
-      <section id='links-section'>
-        stuff goes here
-      </section>
+      <img class='logo' src='./images/rocket.svg' alt='rocket logo' />
+      <h1>jetFuel</h1>
+    </header>
+
+    <form>
+      <p class='input-label'>URL to shorten:</p>
+      <input type='text' class='input-field input-url' name='input-url' placeholder='Type or paste URL here'>
+      <p class='input-label'>Save in folder:</p>
+      <input type='text' class='input-field input-folder' name='input-folder' placeholder='Name the folder'>
+      <button type='submit'>Save short URL</button>
+    </form>
+
+    <section id='links-section'>
+    </section>
 
     <script>
       window.jQuery || document.write('<script src="./scripts/jquery-3.2.1.min.js"><\/script>')
