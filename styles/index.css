@@ -86,8 +86,12 @@ button {
   margin: 10px auto;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 /* LINKS SECTION */
-#links-section {
+#folders-section {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
