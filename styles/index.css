@@ -95,8 +95,8 @@ button {
   margin: 50px 0;
 }
 
-.folder {
-
+.folder-link {
+  text-decoration: none;
 }
 
 .folder-icon {
