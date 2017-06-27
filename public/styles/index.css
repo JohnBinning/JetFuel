@@ -1,0 +1,109 @@
+/* -----FONTS----- */
+h1 {
+  font-family: 'Chango', cursive;
+  font-size: 80px;
+  color: #7C8FA1;
+  text-transform: uppercase;
+  line-height: 100%;
+  margin: 0;
+}
+
+h2 {
+  width: 85%;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: normal;
+  overflow: auto;
+}
+
+h2, p, a, button, input {
+  font-family: 'Oswald', sans-serif;
+  color: #7C8FA1;
+  margin: 0;
+}
+
+/* -----CONTENT----- */
+/* BODY */
+body {
+  min-width: 100%;
+  min-height: 100%;
+  background: linear-gradient(
+      rgba(237, 246, 255, 1),
+      rgba(238, 249, 248, 1),
+      rgba(238, 249, 248, 1),
+      rgba(238, 249, 248, 1),
+      rgba(238, 249, 248, 1),
+      rgba(249, 234, 226, 1),
+      rgba(249, 205, 187, 1),
+      rgba(250, 156, 119, 1)
+    ),
+  url('https://static.pexels.com/photos/6675/flight-mountains-sky-flying.jpeg') no-repeat;
+  background-size: cover;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  justify-content: center;
+  margin: 30px;
+}
+
+.logo {
+  width: 90px;
+  height: 90px;
+}
+
+/* FORM */
+form {
+  text-align: center;
+}
+
+.input-label {
+  font-size: 20px;
+  margin: 10px;
+}
+
+.input-field {
+  width: 50%;
+  font-size: 25px;
+  border: 5px solid #7C8FA1;
+  padding: 10px 20px;
+  margin-bottom: 25px;
+}
+
+::placeholder {
+  color: #c2c8ce;
+}
+
+button {
+  display: block;
+  width: 30%;
+  border: none;
+  background-color: #7C8FA1;
+  font-size: 25px;
+  color: #edf6ff;
+  padding: 10px;
+  margin: 10px auto;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+/* LINKS SECTION */
+#folders-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 50px 0;
+}
+
+.folder:hover {
+  box-shadow: 2px 2px 17px #000000;
+}
+
+.folder-icon {
+  width: 200px;
+  margin: auto;
+}
