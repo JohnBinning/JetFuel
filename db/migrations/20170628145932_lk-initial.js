@@ -11,6 +11,7 @@ exports.up = function(knex, Promise) {
       table.string('url')
       table.integer('folder_id').unsigned()
       table.foreign('folder_id').references('folders.id')
+      table.string('shortened_url')
     })
   ])
 };
