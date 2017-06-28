@@ -5,9 +5,8 @@ const shortid = require('shortid');
 const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
-const database = require('knex')[configuration];
+const database = require('knex')(configuration);
 
-console.log(shortid.generate(), 'short id2')
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -73,17 +72,19 @@ app.get('api/v1/folders/:id/links', (request, response) => {
 })
 
 app.post('/api/v1/folders', (request, response) => {
-  const { folder } = request.body
+  const folder = request.body
+  // console.log(request.body, ' folder');
 
   if (!folder.name) {
     return response.status(422).send({
       error: 'No folder name provided'
     })
   }
-
+  
   database('folders').insert(folder, 'id')
-    .then((folder) => {
-      response.status(201).json({ id: folder[0] })
+    .then((folderId) => {
+      console.log(folderId, 'folder');
+      response.status(201).json({ id: folderId[0] })
     })
   .catch((error) => {
     response.status(500).json({ error })
