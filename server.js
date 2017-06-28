@@ -5,12 +5,12 @@ const shortid = require('shortid');
 const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
-const database = require('knex')[configuration];
+const database = require('knex')(configuration);
+const domain = process.env.DOMAIN_ENV || 'localhost:3000';
 
-console.log(shortid.generate(), 'short id2')
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`));
 
 app.set('port', process.env.PORT || 3000);
@@ -73,7 +73,7 @@ app.get('api/v1/folders/:id/links', (request, response) => {
 })
 
 app.post('/api/v1/folders', (request, response) => {
-  const { folder } = request.body
+  const folder = request.body
 
   if (!folder.name) {
     return response.status(422).send({
@@ -82,8 +82,8 @@ app.post('/api/v1/folders', (request, response) => {
   }
 
   database('folders').insert(folder, 'id')
-    .then((folder) => {
-      response.status(201).json({ id: folder[0] })
+    .then((folderId) => {
+      response.status(201).json({ id: folderId[0] })
     })
   .catch((error) => {
     response.status(500).json({ error })
@@ -91,7 +91,8 @@ app.post('/api/v1/folders', (request, response) => {
 })
 
 app.post('/api/v1/links', (request, response) => {
-  const { link } = request.body
+  const link = request.body
+  link.shortened_url = `${domain}/${shortid.generate()}`
 
   if (!link.shortened_url) {
     return response.status(422).send({
@@ -115,14 +116,6 @@ app.post('/api/v1/links', (request, response) => {
       response.status(500).json({ error })
     })
 })
-
-
-
-
-
-
-
-
 
 
 app.listen(app.get('port'), () => {
