@@ -24,7 +24,6 @@ const getFolders = () => {
 
 const displayFolders = (folderArray) => {
   folderArray.forEach((folder) => {
-    console.log("Displaying ", folder);
     $('#folders-section').prepend(folderHtmlGenerator(folder.name))
   })
 }
@@ -34,7 +33,7 @@ const clearInputs = () => {
 }
 
 const postFolder = (folderNameVal) => {
-  console.log("POSTING FOLDER!!!!!!!!!!");
+  // console.log("POSTING FOLDER!!!!!!!!!!");
 
   const header = { "Content-Type": "application/json" };
   const body = { "name": `${folderNameVal}` };
@@ -42,15 +41,16 @@ const postFolder = (folderNameVal) => {
   return fetch('/api/v1/folders', {method: "POST", headers: header, body: JSON.stringify(body)})
     .then(resp => resp.json())
     .then(id => {
+      console.log(id, 'id in post folder');
       return id
     })
   .catch(error => console.log('Error retreiving folders: ', error))
 }
 
 const postLink = (linkNameVal, linkUrlVal, matchingFolder) => {
-  console.log('linkNameVal: ', linkNameVal);
-  console.log('linkUrlVal: ', linkUrlVal);
-  console.log('matchingFolder: ', matchingFolder);
+  // console.log('linkNameVal: ', linkNameVal);
+  // console.log('linkUrlVal: ', linkUrlVal);
+  // console.log('matchingFolder: ', matchingFolder);
 
   const header = { "Content-Type": "application/json" };
   const body = { "name": `${linkNameVal}`, "url": `${linkUrlVal}`, "folder_id": `${matchingFolder}` };
@@ -69,13 +69,17 @@ $('.submit-btn').on('click', (e) => {
   })
 console.log("********matchingFolder: ", matchingFolder);
 
-  let folderToPass;
-  if (matchingFolder === undefined) {
-    folderToPass = parseInt(postFolder(folderNameVal));
+  let folderToPass = 'default folder to pass';
+
+  if (matchingFolder == undefined) {
+    postFolder(folderNameVal)
+      .then( folder_id => {
+        console.log(folder_id, 'folder_id');
+        postLink(linkNameVal, linkUrlVal, folder_id.id)
+      })
   } else {
-    folderToPass = matchingFolder.id;
+    postLink(linkNameVal, linkUrlVal, matchingFolder.id);
   }
-  postLink(linkNameVal, linkUrlVal, folderToPass);
 
   clearInputs();
   $('#folders-section').html('');
