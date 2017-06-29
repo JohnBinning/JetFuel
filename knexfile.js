@@ -4,7 +4,7 @@ module.exports = {
 
   development: {
     client: 'pg',
-    connection: 'postgres://localhost/jetFuel',
+    connection: 'postgres://localhost/jetfuel',
     useNullAsDefault: true,
     migrations: {
       directory: './db/migrations'

@@ -56,7 +56,9 @@ app.get('/api/v1/folders/:id', (request, response) => {
   })
 })
 
-app.get('api/v1/folders/:id/links', (request, response) => {
+
+
+app.get('/api/v1/folders/:id/links', (request, response) => {
   database('links').where('folder_id', request.params.id).select()
     .then((links) => {
       if (links.length) {
