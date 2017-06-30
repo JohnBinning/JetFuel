@@ -1,0 +1,69 @@
+let linksData = [
+  { id: 1,
+    name: 'the cake is a lie',
+    url: 'www.bettycrocker.com/recipes/black-forest-cake/4e66caed-4e29-4154-a92d-27332162baa4',
+    folder_id: 1,
+    shortened_url: 'http://localhost:3000/S16l-hWNZ',
+    visits: 4
+  },
+  { id: 2,
+    name: 'gargoyle',
+    url: 'lh3.googleusercontent.com/-ey0YbW6r-mA/VUeTA8R6LFI/AAAAAAAAAQw/i0BJ_-UuQ4w/s640/blogger-image-2097924919.jpg',
+    folder_id: 3,
+    shortened_url: 'http://localhost:3000/rJccW3ZV-',
+    visits: 3
+  },
+  { id: 3,
+    name: 'crab grass',
+    url: 'www.garden-counselor-lawn-care.com/getting-rid-of-crab-grass.html',
+    folder_id: 2,
+    shortened_url: 'http://localhost:3000/Sy1rzlzVb',
+    visits: 8
+  },
+  { id: 4,
+    name: 'vinegar weedkiller recipe',
+    url: 'www.garden-counselor-lawn-care.com/vinegar-weed-killer.html',
+    folder_id: 4,
+    shortened_url: 'http://localhost:3000/9Djee873K',
+    visits: 93
+  },
+  { id: 5,
+    name: 'dwight pencil cup',
+    url: '3.bp.blogspot.com/-hGy0r-Zej60/UTZetVp5iTI/AAAAAAAABxE/pUwniVN5TY4/s1600/pencilcup.jpg',
+    folder_id: 5,
+    shortened_url: 'http://localhost:3000/Hih83no2Kj2',
+    visits: 7
+  },
+  { id: 6,
+    name: 'writing instruments worthy of my pencil cup',
+    url: 'financesonline.com/10-most-expensive-writing-instruments-in-the-world/',
+    folder_id: 5,
+    shortened_url: 'http://localhost:3000/98j2kLWa9ah',
+    visits: 7
+  }
+]
+
+const createLink = (knex, link) => {
+  return knex('links').insert({ //knex.insert is a Promise and MUST be returned
+    id: link.id,
+    name: link.name,
+    url: link.url,
+    folder_id: link.folder_id,
+    shortened_url: link.shortened_url,
+    visits: link.visits
+  }, 'id')
+};
+
+exports.seed = (knex, Promise) => {
+  return knex('links').del() // delete footnotes first
+    .then(() => {
+      let linkPromises = []; //leverage Promise.all to generate a promise for each footnote we're inserting
+
+      linksData.forEach(link => { //can't loop through anything in the insert step of knex
+        linkPromises.push(createLink(knex, link));
+      });
+
+      return Promise.all(linkPromises);
+    })
+    .catch(error => console.log(`Error seeding data: ${error}`));
+};
