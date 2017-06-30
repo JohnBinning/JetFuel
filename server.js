@@ -7,11 +7,17 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 const domain = process.env.DOMAIN_ENV || 'localhost:3000';
-
+const routes = require('./routes.js')
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`));
+app.use((req, res, next) => {
+   res.header('Access-Control-Allow-Origin', '*');
+   res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE');
+   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested With, Content-Type, Accept');
+   next();
+});
 
 app.set('port', process.env.PORT || 3000);
 
@@ -40,6 +46,22 @@ app.get('/api/v1/folders', (request, response) => {
   })
 })
 
+app.get('/api/v1/links', (request, response) => {
+  database('links').select()
+  .then((links) => {
+    if (links.length) {
+      response.status(200).json(links)
+    } else {
+      response.status(404).json({
+        error: 'No links found'
+      })
+    }
+  })
+  .catch((error) => {
+    response.status(500).json({ error })
+  })
+})
+
 app.get('/api/v1/folders/:id', (request, response) => {
   database('folders').where('id', request.params.id).select()
     .then((folders) => {
@@ -55,7 +77,6 @@ app.get('/api/v1/folders/:id', (request, response) => {
     response.status(500).json({ error })
   })
 })
-
 
 
 app.get('/api/v1/folders/:id/links', (request, response) => {
@@ -94,7 +115,7 @@ app.post('/api/v1/folders', (request, response) => {
 
 app.post('/api/v1/links', (request, response) => {
   const link = request.body
-  link.shortened_url = `${domain}/${shortid.generate()}`
+  link.shortened_url = `${shortid.generate()}`
 
   if (!link.shortened_url) {
     return response.status(422).send({
@@ -119,6 +140,39 @@ app.post('/api/v1/links', (request, response) => {
     })
 })
 
+// app.get('/api/v1/links/click/:id', (request, response) => {
+//   const id = parseInt(request.params.id);
+//   database('links').where('id', id).increment('visits', 1)
+//     .then(() => {
+//       return database('links').where('id', id).select('url')
+//     })
+//     .then(matchedURL => {
+//       console.log( matchedURL[0].url);
+//       response.redirect(302, `http://${matchedURL[0].url}`)
+//     })
+//     .catch(error => { response.status(500).json({error})})
+// })
+
+// app.get('/api/:id/:shortened_url', (request, response) =>{
+//   database('links').where('id', request.params.id).select()
+//     .then((data) => {
+//       if(data.length){
+//         console.log(data[0], 'data maybe')
+//         // response.status(301).json( {example: `${data[0].url}`} )
+//         response.redirect(301, `http://${data[0].url}`)
+//       } else {
+//         response.status(404).json({
+//           error: 'Page not found'
+//         })
+//       }
+//     })
+//     .catch((error) =>{
+//       response.status(500).json({error})
+//     })
+// })
+
+
+app.get('/api/:id/:shortened_url', routes.reRouteLink)
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}`);

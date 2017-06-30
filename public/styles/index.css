@@ -53,6 +53,10 @@ header {
   height: 90px;
 }
 
+.title:hover {
+  cursor: pointer;
+}
+
 /* FORM */
 form {
   text-align: center;
@@ -106,4 +110,8 @@ button:hover {
 .folder-icon {
   width: 200px;
   margin: auto;
+}
+
+.folder-icon:hover {
+  cursor: pointer;
 }
