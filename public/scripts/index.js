@@ -40,6 +40,7 @@ const getFolders = () => {
     .then((folders) => {
       if (folders.length) {
         foldersArray = folders;
+        $('#folders-section').html('');
         displayFolders(folders);
       }
     })
@@ -188,11 +189,10 @@ $('.submit-btn').on('click', (e) => {
         })
     } else {
       postLink(linkNameVal, urlToStore, matchingFolder.id);
+      getFolders();
     }
 
     clearInputs();
-    $('#folders-section').html('');
-    getFolders();
   }
 
 })
