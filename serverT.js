@@ -7,7 +7,7 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 const domain = process.env.DOMAIN_ENV || 'localhost:3000';
-const routes = require('./routes.js');
+// const routes = require('./routes.js');
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -174,7 +174,19 @@ app.post('/api/v1/links', (request, response) => {
 // })
 
 
-app.get('/api/:id/:shortened_url', routes.reRouteLink);
+app.get('/api/:shortened_url', (request, response) => {
+  const shortened_url = request.params.shortened_url
+
+  database('links').where('shortened_url', '=', shortened_url).select('url')
+  .then(url => {
+    const originalUrl = url[0].url
+    console.log(`Redirecting http://${domain}/api/${shortened_url} to: `, originalUrl);
+    return response.redirect(302, `http://${originalUrl}`)
+  })
+  .catch((error) => {
+    response.status(500).json({ error })
+  })
+})
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}`);

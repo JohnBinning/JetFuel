@@ -169,7 +169,7 @@ describe('API routes', () => {
         response.body[0].name.should.equal('the cake is a lie');
         response.body[0].url.should.equal('www.bettycrocker.com/recipes/black-forest-cake/4e66caed-4e29-4154-a92d-27332162baa4');
         response.body[0].folder_id.should.equal(1);
-        response.body[0].shortened_url.should.equal('http://localhost:3000/S16l-hWNZ');
+        response.body[0].shortened_url.should.equal('S16l-hWNZ');
         response.body[0].visits.should.equal(4);
         done();
       });
@@ -193,7 +193,7 @@ describe('API routes', () => {
         response.body[0].name.should.equal('dwight pencil cup');
         response.body[0].url.should.equal('3.bp.blogspot.com/-hGy0r-Zej60/UTZetVp5iTI/AAAAAAAABxE/pUwniVN5TY4/s1600/pencilcup.jpg');
         response.body[0].folder_id.should.equal(5);
-        response.body[0].shortened_url.should.equal('http://localhost:3000/Hih83no2Kj2');
+        response.body[0].shortened_url.should.equal('Hih83no2Kj2');
         response.body[0].visits.should.equal(7);
         done();
       });
@@ -239,7 +239,7 @@ describe('API routes', () => {
         response.body[5].id.should.equal(6);
         response.body[4].url.should.equal('3.bp.blogspot.com/-hGy0r-Zej60/UTZetVp5iTI/AAAAAAAABxE/pUwniVN5TY4/s1600/pencilcup.jpg');
         response.body[3].name.should.equal('vinegar weedkiller recipe');
-        response.body[2].shortened_url.should.equal('http://localhost:3000/Sy1rzlzVb');
+        response.body[2].shortened_url.should.equal('Sy1rzlzVb');
         response.body[1].folder_id.should.equal(3);
         done();
         });
