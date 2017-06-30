@@ -39,6 +39,7 @@ const getFolders = () => {
     .then((resp) => resp.json())
     .then((folders) => {
       foldersArray = folders;
+      $('#folders-section').html('')
       displayFolders(folders);
     })
     .catch((error) => console.log('Problem retreiving folders: ', error))
@@ -156,6 +157,16 @@ const verifyUrl = (nakedUrl) => {
   }
 }
 
+$('.search').on('keyup', (e) => {
+  if(foldersArray && foldersArray.length) {
+    $('#folders-section').html('')
+    let filtered = foldersArray.filter(folder => {
+      return folder.name.includes(e.target.value)
+    })
+    displayFolders(filtered)
+  }
+
+}
 
 $('.submit-btn').on('click', (e) => {
   e.preventDefault();
