@@ -1,6 +1,6 @@
 let foldersArray;
 let matchingFolder;
-const domain = 'localhost:3000'
+const domain = 'localhost:3000';
 
 const folderHtmlGenerator = (name) => {
   return(
@@ -13,21 +13,23 @@ const folderHtmlGenerator = (name) => {
   )
 }
 
-//<a href='${linkObject.shortened_url}' target='__blank'>
-const linkHtmlGenerator = (linkObject) => {
+const linkHtmlGenerator = (linkObject, newUrl) => {
   return (
     `
-      <article class='link ${linkObject.shortened_url}' id='${linkObject.id}'>
-          <h2 class='${linkObject.name}'>${linkObject.name}</h2>
-          <p class='${linkObject.id}'>${linkObject.shortened_url}</p>
-      </article>
+        <article class='link ${newUrl}' id='${linkObject.id}'>
+          <h2 class='${linkObject.name}'>
+            <p>${linkObject.name}</p>
+            <p id='link-text'>http://${domain}/api/${newUrl}</p>
+          </h2>
+        </article>
     `
   )
 }
 
 const displayLinks = (linksArray) => {
   linksArray.forEach( link => {
-      $('#folders-section').prepend(linkHtmlGenerator(link))
+      const newUrl = `${link.shortened_url}`
+      $('#folders-section').prepend(linkHtmlGenerator(link, newUrl))
       clickLinks(link)
   })
 }
@@ -42,18 +44,26 @@ const getFolders = () => {
     .catch((error) => console.log('Problem retreiving folders: ', error))
 }
 
+const incrementLinkVisits = (linkId) => {
+  fetch(`/api/v1/links/click/${linkId}`)
+    .then((response) => response.json())
+    .then((res) => console.log('Increment link visits response: ', res))
+  .catch((error) => console.log('Error incrementing link visits: ', error))
+}
+
+const redirectLink = (url) => {
+  fetch(`/api/${url}`)
+    .then((response) => response.json())
+  .catch((error) => console.log('Error redirecting: ', error))
+}
 
 const clickLinks = () => {
-  $('h2').on('click', (e) => {
-    let linkId = e.target.closest('.link').id;
-    let linkShortenedUrl = e.target.closest('.link').classList[1];
-    console.log('Second class of clicked link: ', linkShortenedUrl);
-    fetch(`/api/${linkId}/${linkShortenedUrl}`)
-      .then((response) => response.json())
-      .then((res) => {
-        console.log(JSON.parse(res), 'clicklinks rsponse');
-
-      })
+  $('p').on('click', (e) => {
+    const id = e.target.closest('.link').id;
+    const url = e.target.closest('.link').classList[1];
+    // incrementLinkVisits(linkId);
+    redirectLink(url)
+    window.location = `http://${domain}/api/${url}`
   })
 }
 
