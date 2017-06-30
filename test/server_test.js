@@ -3,7 +3,10 @@ const app = express();
 const shortid = require('shortid');
 const bodyParser = require('body-parser');
 const environment = 'test';
-const knex = require('../db/knex');
+const knex = require('knex');
+
+process.env.NODE_ENV = 'test';
+
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 const chai = require('chai');
@@ -21,11 +24,11 @@ describe('Client Routes', () => {
   });
 
   beforeEach((done) => {
-    knex.migrate.rollback()
+    database.migrate.rollback()
     .then(() => {
-      knex.migrate.latest()
+      database.migrate.latest()
       .then(() => {
-        return knex.seed.run()
+        return database.seed.run()
         .then(() => {
           done();
         });
