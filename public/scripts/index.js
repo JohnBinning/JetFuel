@@ -166,12 +166,12 @@ $('.search').on('keyup', (e) => {
   if(foldersArray && foldersArray.length) {
     $('#folders-section').html('')
     let filtered = foldersArray.filter(folder => {
-      return folder.name.includes(e.target.value)
+      return folder.name.toLowerCase().includes(e.target.value.toLowerCase())
     })
     displayFolders(filtered)
   }
 
-}
+})
 
 $('.submit-btn').on('click', (e) => {
   e.preventDefault();
