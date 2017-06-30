@@ -1,4 +1,4 @@
-let foldersArray;
+let foldersArray = [];
 let matchingFolder;
 const domain = 'steelbirdfood.herokuapp.com';
 
@@ -38,8 +38,10 @@ const getFolders = () => {
   fetch('/api/v1/folders')
     .then((resp) => resp.json())
     .then((folders) => {
-      foldersArray = folders;
-      displayFolders(folders);
+      if (folders.length) {
+        foldersArray = folders;
+        displayFolders(folders);
+      }
     })
     .catch((error) => console.log('Problem retreiving folders: ', error))
 }
@@ -70,6 +72,11 @@ const clickLinks = () => {
 const clickFolders = () => {
   $('.folder-icon').on('click', (e) => {
     let folderName = e.target.closest('.folder').id
+
+    if (!foldersArray.length) {
+      return
+    }
+
     let newMatchingFolder = foldersArray.find( folder => {
       return folder.name === folderName
     })
