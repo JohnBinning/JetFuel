@@ -95,7 +95,7 @@ app.get('/api/v1/folders/:id/links', (request, response) => {
   })
 })
 
-app.post('/api/v1/folders/post', (request, response) => {
+app.post('/api/v1/folders', (request, response) => {
   const folder = request.body
   console.log(folder, 'body folder');
 

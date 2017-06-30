@@ -91,15 +91,13 @@ const postFolder = (folderNameVal) => {
   return fetch('/api/v1/folders', {method: "POST", headers: header, body: JSON.stringify(body)})
     .then(resp => resp.json())
     .then(id => {
+
       return id
     })
   .catch(error => console.log('Error retreiving folders: ', error))
 }
 
 const postLink = (linkNameVal, linkUrlVal, matchingFolder) => {
-  // console.log('linkNameVal: ', linkNameVal);
-  // console.log('linkUrlVal: ', linkUrlVal);
-  // console.log('matchingFolder: ', matchingFolder);
 
   const header = { "Content-Type": "application/json" };
   const body = { "name": `${linkNameVal}`, "url": `${linkUrlVal}`, "folder_id": `${matchingFolder}` };
@@ -122,6 +120,7 @@ $('.submit-btn').on('click', (e) => {
   if (matchingFolder == undefined) {
     postFolder(folderNameVal)
       .then( folder_id => {
+        getFolders()
         postLink(linkNameVal, linkUrlVal, folder_id.id)
       })
   } else {

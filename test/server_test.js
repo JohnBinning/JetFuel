@@ -84,7 +84,7 @@ describe('API routes', () => {
     });
   });
 
-  it('should return a 404 if a specific folder cannot be found by name', (done) => {
+  it('should return a 404 if a specific folder cannot be found by id', (done) => {
     chai.request(server)
     .get('/api/v1/folders/200007')
     .end((err, response) => {
@@ -134,7 +134,22 @@ describe('API routes', () => {
         });
       });
     });
-  })
+
+    it('should not create a record with missing data', (done) => {
+      chai.request(server)
+      .post('/api/v1/links')
+      .send({
+        name: 'craig',
+        url: 'craig.com',
+        visits: '4'
+      })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.body.error.should.equal('Expected format: { name: <String>, url: <String>, folder_id: <Integer> }. You are missing a folder_id property.');
+        done();
+      });
+    });
+  });
 
   describe(' GET /api/v1/links', () => {
 
@@ -180,6 +195,15 @@ describe('API routes', () => {
         response.body[0].folder_id.should.equal(5);
         response.body[0].shortened_url.should.equal('http://localhost:3000/Hih83no2Kj2');
         response.body[0].visits.should.equal(7);
+        done();
+      });
+    });
+
+    it('should return a 404 if a specific folder cannot be found by id', (done) => {
+      chai.request(server)
+      .get('/api/v1/folders/200007/2')
+      .end((err, response) => {
+        response.should.have.status(404);
         done();
       });
     });
