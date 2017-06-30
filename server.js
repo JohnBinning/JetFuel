@@ -148,36 +148,7 @@ app.get('/api/v1/links/click/:id', (request, response) => {
   database('links').where('id', id).increment('visits', 1)
     .then((response) => response.json())
   .catch((error) => console.log('Error incrementing link visits: ', error))
-}); //IF UNCOMMENTING OUT CODE BELOW, DELETE THIS LINE!
-
-//     .then(() => {
-//       return database('links').where('id', id).select('url')
-//     })
-//     .then(matchedURL => {
-//       console.log( matchedURL[0].url);
-//       response.redirect(302, `http://${matchedURL[0].url}`)
-//     })
-//     .catch(error => { response.status(500).json({error})})
-// })
-
-// app.get('/api/:id/:shortened_url', (request, response) =>{
-//   database('links').where('id', request.params.id).select()
-//     .then((data) => {
-//       if(data.length){
-//         console.log(data[0], 'data maybe')
-//         // response.status(301).json( {example: `${data[0].url}`} )
-//         response.redirect(301, `http://${data[0].url}`)
-//       } else {
-//         response.status(404).json({
-//           error: 'Page not found'
-//         })
-//       }
-//     })
-//     .catch((error) =>{
-//       response.status(500).json({error})
-//     })
-// })
-
+});
 
 app.get('/api/:shortened_url', (request, response) => {
   const shortened_url = request.params.shortened_url
