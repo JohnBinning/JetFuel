@@ -115,31 +115,79 @@ const postLink = (linkNameVal, linkUrlVal, matchingFolder) => {
   fetch('/api/v1/links', {method: "POST", headers: header, body: JSON.stringify(body)});
 }
 
+const validateUrl = (urlInput) => {
+  let cleanUrl = getHostname(urlInput);
+
+  return cleanUrl;
+}
+
+const getHostname = (urlInput) => {
+  let nakedUrl = '';
+  if (urlInput.includes('http://')) {
+    let hostname;
+
+    url.indexOf("://") > -1 ? hostname = url.split('/')[2] : hostname = url.split('/')[0]
+
+    //find & remove port number
+    hostname = hostname.split(':')[0];
+    //find & remove "?"
+    hostname = hostname.split('?')[0];
+
+    nakedUrl = hostname;
+    let verifiedUrl = verifyUrl(nakedUrl);
+    return verifiedUrl;
+  } else {
+    nakedUrl = urlInput;
+    let verifiedUrl = verifyUrl(nakedUrl);
+    return verifiedUrl;
+  }
+  return verifiedUrl;
+}
+
+const verifyUrl = (nakedUrl) => {
+  if (!nakedUrl.includes('.')) {
+    $('form').prepend(`<p id='error-alert'>Please enter a valid URL</p>`)
+
+    $('.input-url').on('focus', () => {
+      $('#error-alert').html('')
+    })
+  } else {
+    return nakedUrl;
+  }
+}
+
+
 $('.submit-btn').on('click', (e) => {
   e.preventDefault();
   let linkUrlVal = $('.input-url').val();
   let folderNameVal = $('.input-folder').val();
   let linkNameVal = $('.input-name').val();
 
-  let matchingFolder = foldersArray.find((folder) => {
-    return folder.name === folderNameVal
-  })
+  const urlToStore = validateUrl(linkUrlVal);
+  console.log(urlToStore);
 
-  let folderToPass = 'default folder to pass';
+  if (urlToStore) {
+    let matchingFolder = foldersArray.find((folder) => {
+      return folder.name === folderNameVal
+    })
 
-  if (matchingFolder == undefined) {
-    postFolder(folderNameVal)
-      .then( folder_id => {
-        getFolders()
-        postLink(linkNameVal, linkUrlVal, folder_id.id)
-      })
-  } else {
-    postLink(linkNameVal, linkUrlVal, matchingFolder.id);
+    let folderToPass = 'default folder to pass';
+
+    if (matchingFolder == undefined) {
+      postFolder(folderNameVal)
+        .then( folder_id => {
+          getFolders()
+          postLink(linkNameVal, urlToStore, folder_id.id)
+        })
+    } else {
+      postLink(linkNameVal, urlToStore, matchingFolder.id);
+    }
+
+    clearInputs();
+    $('#folders-section').html('');
+    getFolders();
   }
 
-  clearInputs();
-  $('#folders-section').html('');
-  getFolders();
 })
 
 getFolders()
