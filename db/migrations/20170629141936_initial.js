@@ -2,11 +2,11 @@
 exports.up = function(knex, Promise) {
 return Promise.all([
   knex.schema.createTable('folders', (table) => {
-    table.increments('id').primary()
+    table.integer('id').primary()
     table.string('name').unique()
   }),
   knex.schema.createTable('links', (table) => {
-    table.increments('id').primary()
+    table.integer('id').primary()
     table.string('name')
     table.string('url')
     table.integer('folder_id').unsigned()
