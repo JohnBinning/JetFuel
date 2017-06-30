@@ -1,7 +1,8 @@
 let foldersArray;
 let matchingFolder;
+const domain = 'localhost:3000'
 
-function folderHtmlGenerator(name) {
+const folderHtmlGenerator = (name) => {
   return(
     `
     <article class='folder' id='${name}'>
@@ -12,38 +13,52 @@ function folderHtmlGenerator(name) {
   )
 }
 
+//<a href='${linkObject.shortened_url}' target='__blank'>
 const linkHtmlGenerator = (linkObject) => {
   return (
     `
-      <article class='link' id='${linkObject.name}'>
-        <a href='${linkObject.shortened_url}' target='__blank'>
+      <article class='link ${linkObject.shortened_url}' id='${linkObject.id}'>
           <h2 class='${linkObject.name}'>${linkObject.name}</h2>
-        </a>
+          <p class='${linkObject.id}'>${linkObject.shortened_url}</p>
       </article>
     `
   )
 }
 
 const displayLinks = (linksArray) => {
-  linksArray.map( link => {
-    return $('#folders-section').prepend(linkHtmlGenerator(link))
+  linksArray.forEach( link => {
+      $('#folders-section').prepend(linkHtmlGenerator(link))
+      clickLinks(link)
   })
 }
 
-function getFolders()  {
+const getFolders = () => {
   fetch('/api/v1/folders')
-    .then(function(resp){
-      return resp.json()
-    })
-    .then(function(folders) {
+    .then((resp) => resp.json())
+    .then((folders) => {
       foldersArray = folders;
       displayFolders(folders);
     })
     .catch((error) => console.log('Problem retreiving folders: ', error))
 }
 
-function clickFolders() {
-  $('.folder-icon').on('click', function(e) {
+
+const clickLinks = () => {
+  $('h2').on('click', (e) => {
+    let linkId = e.target.closest('.link').id;
+    let linkShortenedUrl = e.target.closest('.link').classList[1];
+    console.log('Second class of clicked link: ', linkShortenedUrl);
+    fetch(`/api/${linkId}/${linkShortenedUrl}`)
+      .then((response) => response.json())
+      .then((res) => {
+        console.log(JSON.parse(res), 'clicklinks rsponse');
+
+      })
+  })
+}
+
+const clickFolders = () => {
+  $('.folder-icon').on('click', (e) => {
     let folderName = e.target.closest('.folder').id
     let newMatchingFolder = foldersArray.find( folder => {
       return folder.name === folderName
@@ -57,8 +72,8 @@ function clickFolders() {
   })
 }
 
-function displayFolders (folderArray) {
-  folderArray.forEach(function(folder) {
+const displayFolders = (folderArray) => {
+  folderArray.forEach((folder) => {
     $('#folders-section').prepend(folderHtmlGenerator(folder.name))
     clickFolders()
   })
@@ -68,7 +83,7 @@ const clearInputs = () => {
   $('input').val('')
 }
 
-function postFolder (folderNameVal) {
+const postFolder = (folderNameVal) => {
 
   const header = { "Content-Type": "application/json" };
   const body = { "name": `${folderNameVal}` };
@@ -81,7 +96,7 @@ function postFolder (folderNameVal) {
   .catch(error => console.log('Error retreiving folders: ', error))
 }
 
-function postLink(linkNameVal, linkUrlVal, matchingFolder) {
+const postLink = (linkNameVal, linkUrlVal, matchingFolder) => {
   // console.log('linkNameVal: ', linkNameVal);
   // console.log('linkUrlVal: ', linkUrlVal);
   // console.log('matchingFolder: ', matchingFolder);
@@ -92,7 +107,7 @@ function postLink(linkNameVal, linkUrlVal, matchingFolder) {
   fetch('/api/v1/links', {method: "POST", headers: header, body: JSON.stringify(body)});
 }
 
-$('.submit-btn').on('click', function(e) {
+$('.submit-btn').on('click', (e) => {
   e.preventDefault();
   let linkUrlVal = $('.input-url').val();
   let folderNameVal = $('.input-folder').val();
@@ -119,3 +134,7 @@ $('.submit-btn').on('click', function(e) {
 })
 
 getFolders()
+
+$('.title').on('click', () => {
+  location.reload()
+})
