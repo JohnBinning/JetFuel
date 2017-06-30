@@ -1,6 +1,6 @@
-let foldersArray;
+let foldersArray = [];
 let matchingFolder;
-const domain = 'localhost:3000';
+const domain = 'steelbirdfood.herokuapp.com';
 
 const folderHtmlGenerator = (name) => {
   return(
@@ -71,6 +71,11 @@ const clickLinks = () => {
 const clickFolders = () => {
   $('.folder-icon').on('click', (e) => {
     let folderName = e.target.closest('.folder').id
+
+    if (!foldersArray.length) {
+      return
+    }
+
     let newMatchingFolder = foldersArray.find( folder => {
       return folder.name === folderName
     })
@@ -192,11 +197,10 @@ $('.submit-btn').on('click', (e) => {
         })
     } else {
       postLink(linkNameVal, urlToStore, matchingFolder.id);
+      getFolders();
     }
 
     clearInputs();
-    $('#folders-section').html('');
-    getFolders();
   }
 
 })
