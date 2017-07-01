@@ -112,7 +112,7 @@ button:hover {
   cursor: pointer;
   color: #7C8FA1;
   background-color: #F9CDBB;
-  /*box-shadow: 2px 2px 5px rgb(250, 156, 119);*/
+  box-shadow: 2px 2px 5px #7C8FA1;
 }
 
 .submit-btn {
