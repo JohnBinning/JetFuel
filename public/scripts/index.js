@@ -53,7 +53,7 @@ const clearInputs = (linkUrlVal, folderNameVal, linkNameVal) => {
 const findMatchingFolder = (foldersArray) => {
   return foldersArray.find((folder) => {
     return folder.name === folderNameVal
-  }
+  })
 }
 
 const removeProtocol = (urlInput) => {
