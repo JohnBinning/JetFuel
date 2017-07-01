@@ -32,7 +32,7 @@ $('.submit-btn').on('click', (e) => {
 
     let folderToPass = 'default folder to pass';
 
-    if (matchingFolder == undefined) {
+    if (matchingFolder == undefined && linkUrlVal !== '' && folderNameVal !== '' && linkNameVal !== '') {
       postFolder(folderNameVal)
         .then( folder_id => {
           getFolders();
@@ -96,7 +96,7 @@ const verifyTld = (nakedUrl) => {
 }
 
 const successMessage = (name) => {
-  $('form').append(`<article class='success-message'><p class='success-message-text'>Success! Your shortened link is in the ${name} folder!</p></article>`)
+  $('form').append(`<article class='success-message'><p class='success-message-text'>SUCCESS! Your shortened link is in the ${name} folder below!</p></article>`)
 
   $('form').on('focusout', () => {
     $('.success-message').empty();
