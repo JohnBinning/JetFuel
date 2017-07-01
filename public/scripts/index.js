@@ -32,7 +32,7 @@ $('.submit-btn').on('click', (e) => {
 
     let folderToPass = 'default folder to pass';
 
-    if (matchingFolder == undefined && linkUrlVal !== '' && folderNameVal !== '' && linkNameVal !== '') {
+    if (matchingFolder == undefined && urlToStore.includes('.') && linkUrlVal !== '' && folderNameVal !== '' && linkNameVal !== '') {
       postFolder(folderNameVal)
         .then( folder_id => {
           getFolders();
