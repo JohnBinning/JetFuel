@@ -168,6 +168,17 @@ button:hover {
   min-width: 400px;
   overflow-wrap: normal;
   overflow-wrap: break-word;
+  padding: 15px 30px;
+}
+
+.link:hover {
+  background-color: #7C8FA1;
+  border-radius: 25px;
+}
+
+.link:hover p,
+.link:hover a {
+  color: white;
 }
 
 /*UNIVERSALS*/

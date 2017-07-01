@@ -37,14 +37,14 @@ $('.submit-btn').on('click', (e) => {
         .then( folder_id => {
           getFolders();
           postLink(linkNameVal, urlToStore, folder_id.id);
+          successMessage(folderNameVal);
           clearInputs(linkUrlVal, folderNameVal, linkNameVal);
-          successMessage();
         })
     } else {
       postLink(linkNameVal, urlToStore, matchingFolder.id);
       getFolders();
+      successMessage(folderNameVal);
       clearInputs(linkUrlVal, folderNameVal, linkNameVal);
-      successMessage();
     }
 
   }
@@ -95,8 +95,8 @@ const verifyTld = (nakedUrl) => {
   }
 }
 
-const successMessage = () => {
-  $('form').append(`<article class='success-message'><p class='success-message-text'>Success!</p></article>`)
+const successMessage = (name) => {
+  $('form').append(`<article class='success-message'><p class='success-message-text'>Success! Your shortened link is in the ${name} folder!</p></article>`)
 
   $('form').on('focusout', () => {
     $('.success-message').empty();
