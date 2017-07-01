@@ -4,6 +4,99 @@ let matchingFolder;
 let mostToLeast = true;
 const domain = 'localhost:3000';
 
+// form section
+
+const clearInputs = () => {
+  if (!linkUrlVal === '' || !folderNameVal === '' || !linkNameVal === '') {
+    $('input').val('')
+  }
+}
+
+const removeProtocol = (urlInput) => {
+  let cleanUrl = getHostname(urlInput);
+
+  return cleanUrl;
+}
+
+const getHostname = (urlInput) => {
+  let nakedUrl = '';
+  if (urlInput.includes('http://') || urlInput.includes('https://')) {
+    let hostname;
+
+    urlInput.indexOf("://") > -1 ? hostname = urlInput.split('/')[2] : hostname = urlInput.split('/')[0]
+
+    //find & remove port number
+    hostname = hostname.split(':')[0];
+    //find & remove "?"
+    hostname = hostname.split('?')[0];
+
+    nakedUrl = hostname;
+    let verifiedUrl = verifyTld(nakedUrl);
+    return verifiedUrl;
+  } else {
+    nakedUrl = urlInput;
+    let verifiedUrl = verifyTld(nakedUrl);
+    return verifiedUrl;
+  }
+  return verifiedUrl;
+}
+
+const verifyTld = (nakedUrl) => {
+  if (!nakedUrl.includes('.')) {
+    $('form').prepend(`<article class='error-alert'><p class='error-alert-text'>Please enter a valid URL</p></article>`)
+
+    $('.input-url').on('focus', () => {
+      $('.error-alert').empty();
+    })
+  } else {
+    return nakedUrl;
+  }
+}
+
+$('.submit-btn').on('click', (e) => {
+  e.preventDefault();
+
+  $('.error-alert').empty();
+
+  let linkUrlVal = $('.input-url').val();
+  let folderNameVal = $('.input-folder').val();
+  let linkNameVal = $('.input-name').val();
+
+  if (linkUrlVal === '' || folderNameVal === '' || linkNameVal === '') {
+    $('form').prepend(`<article class='error-alert'><p class='error-alert-text'>Please fill out all input fields</p></article>`)
+
+    $('.error-alert').on('focus', () => {
+      $('.error-alert').empty();
+    })
+  }
+
+  const urlToStore = removeProtocol(linkUrlVal);
+
+  if (urlToStore) {
+    let matchingFolder = foldersArray.find((folder) => {
+      return folder.name === folderNameVal
+    })
+
+    let folderToPass = 'default folder to pass';
+
+    if (matchingFolder == undefined) {
+      postFolder(folderNameVal)
+        .then( folder_id => {
+          getFolders()
+          postLink(linkNameVal, urlToStore, folder_id.id)
+          clearInputs()
+        })
+    } else {
+      postLink(linkNameVal, urlToStore, matchingFolder.id);
+      getFolders();
+      clearInputs();
+    }
+
+  }
+})
+
+// folder section
+
 const folderHtmlGenerator = (name) => {
   return(
     `
@@ -15,39 +108,27 @@ const folderHtmlGenerator = (name) => {
   )
 }
 
-const linkHtmlGenerator = (linkObject, newUrl) => {
-  return (
-    `
-        <article class='link ${newUrl} ${linkObject.visits}' id='${linkObject.id}'>
-          <h2 class='${linkObject.name}'>
-            <p>${linkObject.name}</p>
-            <a id='link-text' href='http://${domain}/api/${newUrl}' target='_blank' rel='noopener noreferrer'>http://${domain}/api/${newUrl}</a>
-            <p>visited: ${linkObject.visits} times</p>
-          </h2>
-        </article>
-    `
-  )
+const displayFolders = (folderArray) => {
+  folderArray.forEach((folder) => {
+    $('#folders-section').prepend(folderHtmlGenerator(folder.name))
+    clickFolders()
+  })
 }
 
-const appendLinks = (linksArray) => {
-  linksArray.forEach( link => {
-      const newUrl = `${link.shortened_url}`
-      $('#folders-section').append(linkHtmlGenerator(link, newUrl))
-      clickLinks(link)
-  });
-}
+  // folder section server requests
 
-const prependLinks = (linksArray) => {
-  linksArray.forEach( link => {
-      const newUrl = `${link.shortened_url}`
-      $('#folders-section').prepend(linkHtmlGenerator(link, newUrl))
-      clickLinks(link)
-  });
-}
+const postFolder = (folderNameVal) => {
 
-const displayLinks = (linksArray) => {
-  $('#folders-section').empty();
-  mostToLeast ? appendLinks(linksArray) : prependLinks(linksArray)
+  const header = { "Content-Type": "application/json" };
+  const body = { "name": `${folderNameVal}` };
+
+  return fetch('/api/v1/folders', {method: "POST", headers: header, body: JSON.stringify(body)})
+    .then(resp => resp.json())
+    .then(id => {
+
+      return id
+    })
+  .catch(error => console.log('Error retreiving folders: ', error))
 }
 
 const getFolders = () => {
@@ -59,26 +140,6 @@ const getFolders = () => {
       displayFolders(folders);
     })
     .catch((error) => console.log('Problem retreiving folders: ', error))
-}
-
-const incrementLinkVisits = (linkId) => {
-  fetch(`/api/v1/links/click/${linkId}`)
-    .then((response) => response.json())
-  .catch((error) => console.log('Error incrementing link visits: ', error))
-}
-
-const redirectLink = (url) => {
-  fetch(`/api/${url}`)
-    .then((response) => response.json())
-  .catch((error) => console.log('Error redirecting: ', error))
-}
-
-const clickLinks = () => {
-  $('a').on('click', (e) => {
-    const id = e.target.closest('.link').id;
-    const url = e.target.closest('.link').classList[1];
-    incrementLinkVisits(id);
-  })
 }
 
 const clickFolders = () => {
@@ -106,31 +167,57 @@ const clickFolders = () => {
   })
 }
 
-const displayFolders = (folderArray) => {
-  folderArray.forEach((folder) => {
-    $('#folders-section').prepend(folderHtmlGenerator(folder.name))
-    clickFolders()
+// link section
+
+const linkHtmlGenerator = (linkObject, newUrl) => {
+  return (
+    `
+    <article class='link ${newUrl} ${linkObject.visits}' id='${linkObject.id}'>
+      <h2 class='${linkObject.name}'>
+        <p>${linkObject.name}</p>
+        <a id='link-text' href='http://${domain}/api/${newUrl}' target='_blank' rel='noopener noreferrer'>http://${domain}/api/${newUrl}</a>
+        <p>visited: ${linkObject.visits} times</p>
+      </h2>
+    </article>
+    `
+  )
+}
+
+const appendLinks = (linksArray) => {
+  linksArray.forEach( link => {
+    const newUrl = `${link.shortened_url}`
+    $('#folders-section').append(linkHtmlGenerator(link, newUrl))
+    clickLinks(link)
+  });
+}
+
+const prependLinks = (linksArray) => {
+  linksArray.forEach( link => {
+    const newUrl = `${link.shortened_url}`
+    $('#folders-section').prepend(linkHtmlGenerator(link, newUrl))
+    clickLinks(link)
+  });
+}
+
+const displayLinks = (linksArray) => {
+  $('#folders-section').empty();
+  mostToLeast ? appendLinks(linksArray) : prependLinks(linksArray)
+}
+
+const clickLinks = () => {
+  $('a').on('click', (e) => {
+    const id = e.target.closest('.link').id;
+    const url = e.target.closest('.link').classList[1];
+    incrementLinkVisits(id);
   })
 }
 
-const clearInputs = () => {
-  if (!linkUrlVal === '' || !folderNameVal === '' || !linkNameVal === '') {
-    $('input').val('')
-  }
-}
+  // link section server requests
 
-const postFolder = (folderNameVal) => {
-
-  const header = { "Content-Type": "application/json" };
-  const body = { "name": `${folderNameVal}` };
-
-  return fetch('/api/v1/folders', {method: "POST", headers: header, body: JSON.stringify(body)})
-    .then(resp => resp.json())
-    .then(id => {
-
-      return id
-    })
-  .catch(error => console.log('Error retreiving folders: ', error))
+const incrementLinkVisits = (linkId) => {
+  fetch(`/api/v1/links/click/${linkId}`)
+    .then((response) => response.json())
+  .catch((error) => console.log('Error incrementing link visits: ', error))
 }
 
 const postLink = (linkNameVal, linkUrlVal, matchingFolder) => {
@@ -141,46 +228,13 @@ const postLink = (linkNameVal, linkUrlVal, matchingFolder) => {
   fetch('/api/v1/links', {method: "POST", headers: header, body: JSON.stringify(body)});
 }
 
-const validateUrl = (urlInput) => {
-  let cleanUrl = getHostname(urlInput);
-
-  return cleanUrl;
+const redirectLink = (url) => {
+  fetch(`/api/${url}`)
+    .then((response) => response.json())
+  .catch((error) => console.log('Error redirecting: ', error))
 }
 
-const getHostname = (urlInput) => {
-  let nakedUrl = '';
-  if (urlInput.includes('http://') || urlInput.includes('https://')) {
-    let hostname;
-
-    urlInput.indexOf("://") > -1 ? hostname = urlInput.split('/')[2] : hostname = urlInput.split('/')[0]
-
-    //find & remove port number
-    hostname = hostname.split(':')[0];
-    //find & remove "?"
-    hostname = hostname.split('?')[0];
-
-    nakedUrl = hostname;
-    let verifiedUrl = verifyUrl(nakedUrl);
-    return verifiedUrl;
-  } else {
-    nakedUrl = urlInput;
-    let verifiedUrl = verifyUrl(nakedUrl);
-    return verifiedUrl;
-  }
-  return verifiedUrl;
-}
-
-const verifyUrl = (nakedUrl) => {
-  if (!nakedUrl.includes('.')) {
-    $('form').prepend(`<article class='error-alert'><p class='error-alert-text'>Please enter a valid URL</p></article>`)
-
-    $('.input-url').on('focus', () => {
-      $('.error-alert').empty();
-    })
-  } else {
-    return nakedUrl;
-  }
-}
+// controls
 
 $('.search').on('keyup', (e) => {
   if(foldersArray && foldersArray.length) {
@@ -190,52 +244,12 @@ $('.search').on('keyup', (e) => {
     })
     displayFolders(filtered)
   }
-
 })
 
-$('.submit-btn').on('click', (e) => {
-  e.preventDefault();
-
-  $('.error-alert').empty();
-
-  let linkUrlVal = $('.input-url').val();
-  let folderNameVal = $('.input-folder').val();
-  let linkNameVal = $('.input-name').val();
-
-  if (linkUrlVal === '' || folderNameVal === '' || linkNameVal === '') {
-    $('form').prepend(`<article class='error-alert'><p class='error-alert-text'>Please fill out all input fields</p></article>`)
-
-    $('.error-alert').on('focus', () => {
-      $('.error-alert').empty();
-    })
-  }
-
-  const urlToStore = validateUrl(linkUrlVal);
-
-  if (urlToStore) {
-    let matchingFolder = foldersArray.find((folder) => {
-      return folder.name === folderNameVal
-    })
-
-    let folderToPass = 'default folder to pass';
-
-    if (matchingFolder == undefined) {
-      postFolder(folderNameVal)
-        .then( folder_id => {
-          getFolders()
-          postLink(linkNameVal, urlToStore, folder_id.id)
-          clearInputs()
-        })
-    } else {
-      postLink(linkNameVal, urlToStore, matchingFolder.id);
-      getFolders();
-      clearInputs();
-    }
-
-  }
+$('.sort-by-visits').on('click', () => {
+  sortLinks();
+  mostToLeast = !mostToLeast;
 })
-
-getFolders()
 
 const sortLinks = () => {
   const sortedMostLeastLinks = displayedLinkArray.sort((a, b) => {
@@ -245,11 +259,10 @@ const sortLinks = () => {
   displayLinks(sortedMostLeastLinks);
 }
 
-$('.sort-by-visits').on('click', () => {
-  sortLinks();
-  mostToLeast = !mostToLeast;
-})
-
 $('.title').on('click', () => {
   location.reload()
 })
+
+// page load
+
+getFolders()
