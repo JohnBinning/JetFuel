@@ -6,7 +6,7 @@ const folderHtmlGenerator = (name) => {
   return(
     `
     <article class='folder' id='${name}'>
-      <img src='./images/folder.svg' class='folder-icon' alt='folder icon'>
+      <div class='folder-icon' alt='folder icon'></div>
       <h2 class='folder-name'>${name}</h2>
     </article>
     `

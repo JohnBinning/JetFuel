@@ -9,7 +9,6 @@ h1 {
 }
 
 h2 {
-  width: 85%;
   text-align: center;
   text-transform: uppercase;
   white-space: normal;
@@ -39,14 +38,14 @@ body {
   min-width: 100%;
   min-height: 100%;
   background: linear-gradient(
-      rgba(237, 246, 255, 1),
-      rgba(238, 249, 248, 1),
-      rgba(238, 249, 248, 1),
-      rgba(238, 249, 248, 1),
-      rgba(238, 249, 248, 1),
-      rgba(249, 234, 226, 1),
-      rgba(249, 205, 187, 1),
-      rgba(250, 156, 119, 1)
+      rgb(237, 246, 255),
+      rgb(238, 249, 248),
+      rgb(238, 249, 248),
+      rgb(238, 249, 248),
+      rgb(238, 249, 248),
+      rgb(249, 234, 226),
+      rgb(249, 205, 187),
+      rgb(250, 156, 119)
     ),
   url('https://static.pexels.com/photos/6675/flight-mountains-sky-flying.jpeg') no-repeat;
   background-size: cover;
@@ -86,6 +85,7 @@ form {
 
 .input-field {
   width: 75%;
+  border-radius: 15px;
   font-size: 18px;
   border: 5px solid #7C8FA1;
   padding: 10px 20px;
@@ -98,6 +98,7 @@ form {
 
 button {
   display: block;
+  border-radius: 15px;
   width: 30%;
   border: none;
   background-color: #7C8FA1;
@@ -109,6 +110,9 @@ button {
 
 button:hover {
   cursor: pointer;
+  color: #7C8FA1;
+  background-color: #F9CDBB;
+  /*box-shadow: 2px 2px 5px rgb(250, 156, 119);*/
 }
 
 .submit-btn {
@@ -130,18 +134,30 @@ button:hover {
   margin: 50px 0;
 }
 
-.link {
-  min-width: 400px;
-  overflow-wrap: normal;
-  overflow-wrap: break-word;
+.folder {
+  padding: 15px 30px;
 }
 
 .folder:hover {
-  box-shadow: 2px 2px 17px #000000;
+  background-color: #7C8FA1;
+  border-radius: 25px;
+}
+
+.folder:hover .folder-name {
+  color: white;
+}
+
+.folder:hover .folder-icon {
+  background: url('../images/folderhover.svg') no-repeat;
+  background-size: cover;
 }
 
 .folder-icon {
+  display: block;
+  background: url('../images/folder.svg') no-repeat;
+  background-size: cover;
   width: 200px;
+  height: 200px;
   margin: auto;
 }
 
@@ -149,6 +165,11 @@ button:hover {
   cursor: pointer;
 }
 
+.link {
+  min-width: 400px;
+  overflow-wrap: normal;
+  overflow-wrap: break-word;
+}
 
 /*UNIVERSALS*/
 .hidden {
