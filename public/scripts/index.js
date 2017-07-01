@@ -1,5 +1,7 @@
 let foldersArray = [];
+let displayedLinkArray = [];
 let matchingFolder;
+let mostToLeast = true;
 const domain = 'localhost:3000';
 
 const folderHtmlGenerator = (name) => {
@@ -27,12 +29,25 @@ const linkHtmlGenerator = (linkObject, newUrl) => {
   )
 }
 
-const displayLinks = (linksArray) => {
+const appendLinks = (linksArray) => {
+  linksArray.forEach( link => {
+      const newUrl = `${link.shortened_url}`
+      $('#folders-section').append(linkHtmlGenerator(link, newUrl))
+      clickLinks(link)
+  });
+}
+
+const prependLinks = (linksArray) => {
   linksArray.forEach( link => {
       const newUrl = `${link.shortened_url}`
       $('#folders-section').prepend(linkHtmlGenerator(link, newUrl))
       clickLinks(link)
-  })
+  });
+}
+
+const displayLinks = (linksArray) => {
+  $('#folders-section').html('');
+  mostToLeast ? appendLinks(linksArray) : prependLinks(linksArray)
 }
 
 const getFolders = () => {
@@ -49,7 +64,6 @@ const getFolders = () => {
 const incrementLinkVisits = (linkId) => {
   fetch(`/api/v1/links/click/${linkId}`)
     .then((response) => response.json())
-    .then((res) => console.log('Increment link visits response: ', res))
   .catch((error) => console.log('Error incrementing link visits: ', error))
 }
 
@@ -64,8 +78,6 @@ const clickLinks = () => {
     const id = e.target.closest('.link').id;
     const url = e.target.closest('.link').classList[1];
     incrementLinkVisits(id);
-    // redirectLink(url)
-    // window.location = `http://${domain}/api/${url}`
   })
 }
 
@@ -87,9 +99,10 @@ const clickFolders = () => {
     fetch(`/api/v1/folders/${newMatchingFolder.id}/links`)
       .then((response) => response.json())
       .then((linksArray) => {
-        $('#folders-section').html('')
+        displayedLinkArray = linksArray;
         displayLinks(linksArray)
       })
+    .catch((error) => console.log('error retrieving links: ', error))
   })
 }
 
@@ -185,7 +198,6 @@ $('.submit-btn').on('click', (e) => {
   let linkNameVal = $('.input-name').val();
 
   const urlToStore = validateUrl(linkUrlVal);
-  console.log(urlToStore);
 
   if (urlToStore) {
     let matchingFolder = foldersArray.find((folder) => {
@@ -207,10 +219,22 @@ $('.submit-btn').on('click', (e) => {
 
     clearInputs();
   }
-
 })
 
 getFolders()
+
+const sortLinks = () => {
+  const sortedMostLeastLinks = displayedLinkArray.sort((a, b) => {
+    return a.visits < b.visits
+  })
+
+  displayLinks(sortedMostLeastLinks);
+}
+
+$('.sort-by-visits').on('click', () => {
+  sortLinks();
+  mostToLeast = !mostToLeast;
+})
 
 $('.title').on('click', () => {
   location.reload()
