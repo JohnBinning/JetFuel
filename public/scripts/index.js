@@ -6,8 +6,8 @@ const domain = 'localhost:3000';
 
 // form section
 
-const clearInputs = () => {
-  if (!linkUrlVal === '' || !folderNameVal === '' || !linkNameVal === '') {
+const clearInputs = (linkUrlVal, folderNameVal, linkNameVal) => {
+  if (linkUrlVal !== '' || folderNameVal !== '' || linkNameVal !== '') {
     $('input').val('')
   }
 }
@@ -82,14 +82,14 @@ $('.submit-btn').on('click', (e) => {
     if (matchingFolder == undefined) {
       postFolder(folderNameVal)
         .then( folder_id => {
-          getFolders()
-          postLink(linkNameVal, urlToStore, folder_id.id)
-          clearInputs()
+          getFolders();
+          postLink(linkNameVal, urlToStore, folder_id.id);
+          clearInputs(linkUrlVal, folderNameVal, linkNameVal);
         })
     } else {
       postLink(linkNameVal, urlToStore, matchingFolder.id);
       getFolders();
-      clearInputs();
+      clearInputs(linkUrlVal, folderNameVal, linkNameVal);
     }
 
   }
