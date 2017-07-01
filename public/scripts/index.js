@@ -2,7 +2,7 @@ let foldersArray = [];
 let displayedLinkArray = [];
 let matchingFolder;
 let mostToLeast = true;
-const domain = 'localhost:3000';
+const domain = 'steelbirdfood.herokuapp.com';
 
 // form section
 
