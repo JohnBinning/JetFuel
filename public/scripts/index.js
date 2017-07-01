@@ -16,20 +16,13 @@ $('.submit-btn').on('click', (e) => {
   let linkNameVal = $('.input-name').val();
 
   if (linkUrlVal === '' || folderNameVal === '' || linkNameVal === '') {
-    $('form').prepend(`<article class='error-alert'><p class='error-alert-text'>Please fill out all input fields</p></article>`)
-
-    $('.error-alert').on('focus', () => {
-      $('.error-alert').empty();
-    })
+    incompleteFormErrorMessage();
   }
 
   const urlToStore = removeProtocol(linkUrlVal);
 
   if (urlToStore) {
-    let matchingFolder = foldersArray.find((folder) => {
-      return folder.name === folderNameVal
-    })
-
+    let matchingFolder = findMatchingFolder(foldersArray);
     let folderToPass = 'default folder to pass';
 
     if (matchingFolder == undefined && urlToStore.includes('.') && linkUrlVal !== '' && folderNameVal !== '' && linkNameVal !== '') {
@@ -40,9 +33,10 @@ $('.submit-btn').on('click', (e) => {
           successMessage(folderNameVal);
           clearInputs(linkUrlVal, folderNameVal, linkNameVal);
         })
+        .catch((error) => console.log('Error posting folder: ', error))
     } else {
-      postLink(linkNameVal, urlToStore, matchingFolder.id);
       getFolders();
+      postLink(linkNameVal, urlToStore, matchingFolder.id);
       successMessage(folderNameVal);
       clearInputs(linkUrlVal, folderNameVal, linkNameVal);
     }
@@ -53,6 +47,12 @@ $('.submit-btn').on('click', (e) => {
 const clearInputs = (linkUrlVal, folderNameVal, linkNameVal) => {
   if (linkUrlVal !== '' || folderNameVal !== '' || linkNameVal !== '') {
     $('input').val('')
+  }
+}
+
+const findMatchingFolder = (foldersArray) => {
+  return foldersArray.find((folder) => {
+    return folder.name === folderNameVal
   }
 }
 
@@ -93,6 +93,14 @@ const verifyTld = (nakedUrl) => {
   } else {
     return nakedUrl;
   }
+}
+
+const incompleteFormErrorMessage = () => {
+  $('form').prepend(`<article class='error-alert'><p class='error-alert-text'>Please fill out all input fields</p></article>`)
+
+  $('.error-alert').on('focus', () => {
+    $('.error-alert').empty();
+  })
 }
 
 const successMessage = (name) => {
