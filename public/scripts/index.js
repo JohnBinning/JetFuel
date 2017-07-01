@@ -46,7 +46,7 @@ const prependLinks = (linksArray) => {
 }
 
 const displayLinks = (linksArray) => {
-  $('#folders-section').html('');
+  $('#folders-section').empty();
   mostToLeast ? appendLinks(linksArray) : prependLinks(linksArray)
 }
 
@@ -55,7 +55,7 @@ const getFolders = () => {
     .then((resp) => resp.json())
     .then((folders) => {
       foldersArray = folders;
-      $('#folders-section').html('')
+      $('#folders-section').empty();
       displayFolders(folders);
     })
     .catch((error) => console.log('Problem retreiving folders: ', error))
@@ -114,7 +114,9 @@ const displayFolders = (folderArray) => {
 }
 
 const clearInputs = () => {
-  $('input').val('')
+  if (!linkUrlVal === '' || !folderNameVal === '' || !linkNameVal === '') {
+    $('input').val('')
+  }
 }
 
 const postFolder = (folderNameVal) => {
@@ -170,10 +172,10 @@ const getHostname = (urlInput) => {
 
 const verifyUrl = (nakedUrl) => {
   if (!nakedUrl.includes('.')) {
-    $('form').prepend(`<p id='error-alert'>Please enter a valid URL</p>`)
+    $('form').prepend(`<article class='error-alert'><p class='error-alert-text'>Please enter a valid URL</p></article>`)
 
     $('.input-url').on('focus', () => {
-      $('#error-alert').html('')
+      $('.error-alert').empty();
     })
   } else {
     return nakedUrl;
@@ -182,7 +184,7 @@ const verifyUrl = (nakedUrl) => {
 
 $('.search').on('keyup', (e) => {
   if(foldersArray && foldersArray.length) {
-    $('#folders-section').html('')
+    $('#folders-section').empty();
     let filtered = foldersArray.filter(folder => {
       return folder.name.toLowerCase().includes(e.target.value.toLowerCase())
     })
@@ -193,9 +195,20 @@ $('.search').on('keyup', (e) => {
 
 $('.submit-btn').on('click', (e) => {
   e.preventDefault();
+
+  $('.error-alert').empty();
+
   let linkUrlVal = $('.input-url').val();
   let folderNameVal = $('.input-folder').val();
   let linkNameVal = $('.input-name').val();
+
+  if (linkUrlVal === '' || folderNameVal === '' || linkNameVal === '') {
+    $('form').prepend(`<article class='error-alert'><p class='error-alert-text'>Please fill out all input fields</p></article>`)
+
+    $('.error-alert').on('focus', () => {
+      $('.error-alert').empty();
+    })
+  }
 
   const urlToStore = validateUrl(linkUrlVal);
 
@@ -211,13 +224,14 @@ $('.submit-btn').on('click', (e) => {
         .then( folder_id => {
           getFolders()
           postLink(linkNameVal, urlToStore, folder_id.id)
+          clearInputs()
         })
     } else {
       postLink(linkNameVal, urlToStore, matchingFolder.id);
       getFolders();
+      clearInputs();
     }
 
-    clearInputs();
   }
 })
 

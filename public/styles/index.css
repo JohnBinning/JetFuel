@@ -175,3 +175,9 @@ button:hover {
 .hidden {
   display: none;
 }
+
+.error-alert-text {
+  border: 4px solid red;
+  background-color: rgba(250, 156, 119, 0.2);
+  margin: 5px;
+}
