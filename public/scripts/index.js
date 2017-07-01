@@ -1,6 +1,6 @@
 let foldersArray = [];
 let matchingFolder;
-const domain = 'steelbirdfood.herokuapp.com';
+const domain = 'localhost:3000';
 
 const folderHtmlGenerator = (name) => {
   return(
