@@ -6,53 +6,6 @@ const domain = 'localhost:3000';
 
 // form section
 
-const clearInputs = (linkUrlVal, folderNameVal, linkNameVal) => {
-  if (linkUrlVal !== '' || folderNameVal !== '' || linkNameVal !== '') {
-    $('input').val('')
-  }
-}
-
-const removeProtocol = (urlInput) => {
-  let cleanUrl = getHostname(urlInput);
-
-  return cleanUrl;
-}
-
-const getHostname = (urlInput) => {
-  let nakedUrl = '';
-  if (urlInput.includes('http://') || urlInput.includes('https://')) {
-    let hostname;
-
-    urlInput.indexOf("://") > -1 ? hostname = urlInput.split('/')[2] : hostname = urlInput.split('/')[0]
-
-    //find & remove port number
-    hostname = hostname.split(':')[0];
-    //find & remove "?"
-    hostname = hostname.split('?')[0];
-
-    nakedUrl = hostname;
-    let verifiedUrl = verifyTld(nakedUrl);
-    return verifiedUrl;
-  } else {
-    nakedUrl = urlInput;
-    let verifiedUrl = verifyTld(nakedUrl);
-    return verifiedUrl;
-  }
-  return verifiedUrl;
-}
-
-const verifyTld = (nakedUrl) => {
-  if (!nakedUrl.includes('.')) {
-    $('form').prepend(`<article class='error-alert'><p class='error-alert-text'>Please enter a valid URL</p></article>`)
-
-    $('.input-url').on('focus', () => {
-      $('.error-alert').empty();
-    })
-  } else {
-    return nakedUrl;
-  }
-}
-
 $('.submit-btn').on('click', (e) => {
   e.preventDefault();
 
@@ -85,15 +38,70 @@ $('.submit-btn').on('click', (e) => {
           getFolders();
           postLink(linkNameVal, urlToStore, folder_id.id);
           clearInputs(linkUrlVal, folderNameVal, linkNameVal);
+          successMessage();
         })
     } else {
       postLink(linkNameVal, urlToStore, matchingFolder.id);
       getFolders();
       clearInputs(linkUrlVal, folderNameVal, linkNameVal);
+      successMessage();
     }
 
   }
 })
+
+const clearInputs = (linkUrlVal, folderNameVal, linkNameVal) => {
+  if (linkUrlVal !== '' || folderNameVal !== '' || linkNameVal !== '') {
+    $('input').val('')
+  }
+}
+
+const removeProtocol = (urlInput) => {
+  let cleanUrl = getHostname(urlInput);
+
+  return cleanUrl;
+}
+
+const getHostname = (urlInput) => {
+  let nakedUrl = '';
+  if (urlInput.includes('http://') || urlInput.includes('https://')) {
+    let hostname;
+
+    urlInput.indexOf("://") > -1 ? hostname = urlInput.split('/')[2] : hostname = urlInput.split('/')[0]
+
+    hostname = hostname.split(':')[0];
+    hostname = hostname.split('?')[0];
+
+    nakedUrl = hostname;
+    let verifiedUrl = verifyTld(nakedUrl);
+    return verifiedUrl;
+  } else {
+    nakedUrl = urlInput;
+    let verifiedUrl = verifyTld(nakedUrl);
+    return verifiedUrl;
+  }
+  return verifiedUrl;
+}
+
+const verifyTld = (nakedUrl) => {
+  if (!nakedUrl.includes('.')) {
+    $('form').prepend(`<article class='error-alert'><p class='error-alert-text'>Please enter a valid URL</p></article>`)
+
+    $('.input-url').on('focus', () => {
+      $('.error-alert').empty();
+    })
+  } else {
+    return nakedUrl;
+  }
+}
+
+const successMessage = () => {
+  $('form').append(`<article class='success-message'><p class='success-message-text'>Success!</p></article>`)
+
+  $('form').on('focusout', () => {
+    $('.success-message').empty();
+  })
+}
 
 // folder section
 
