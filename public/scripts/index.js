@@ -19,7 +19,7 @@ const linkHtmlGenerator = (linkObject, newUrl) => {
         <article class='link ${newUrl}' id='${linkObject.id}'>
           <h2 class='${linkObject.name}'>
             <p>${linkObject.name}</p>
-            <p id='link-text'>http://${domain}/api/${newUrl}</p>
+            <a id='link-text' href='http://${domain}/api/${newUrl}' target='_blank' rel='noopener noreferrer'>http://${domain}/api/${newUrl}</a>
           </h2>
         </article>
     `
