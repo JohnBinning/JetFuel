@@ -16,10 +16,11 @@ const folderHtmlGenerator = (name) => {
 const linkHtmlGenerator = (linkObject, newUrl) => {
   return (
     `
-        <article class='link ${newUrl}' id='${linkObject.id}'>
+        <article class='link ${newUrl} ${linkObject.visits}' id='${linkObject.id}'>
           <h2 class='${linkObject.name}'>
             <p>${linkObject.name}</p>
             <a id='link-text' href='http://${domain}/api/${newUrl}' target='_blank' rel='noopener noreferrer'>http://${domain}/api/${newUrl}</a>
+            <p>visited: ${linkObject.visits} times</p>
           </h2>
         </article>
     `
@@ -59,17 +60,21 @@ const redirectLink = (url) => {
 }
 
 const clickLinks = () => {
-  $('p').on('click', (e) => {
+  $('a').on('click', (e) => {
     const id = e.target.closest('.link').id;
     const url = e.target.closest('.link').classList[1];
-    // incrementLinkVisits(linkId);
-    redirectLink(url)
-    window.location = `http://${domain}/api/${url}`
+    incrementLinkVisits(id);
+    // redirectLink(url)
+    // window.location = `http://${domain}/api/${url}`
   })
 }
 
 const clickFolders = () => {
   $('.folder-icon').on('click', (e) => {
+    $('.search').addClass('hidden');
+    $('h3').addClass('hidden');
+    $('.sort-by-visits').removeClass('hidden');
+
     let folderName = e.target.closest('.folder').id
 
     if (!foldersArray.length) {
@@ -116,7 +121,7 @@ const postFolder = (folderNameVal) => {
 const postLink = (linkNameVal, linkUrlVal, matchingFolder) => {
 
   const header = { "Content-Type": "application/json" };
-  const body = { "name": `${linkNameVal}`, "url": `${linkUrlVal}`, "folder_id": `${matchingFolder}` };
+  const body = { "name": `${linkNameVal}`, "url": `${linkUrlVal}`, "folder_id": `${matchingFolder}`, "visits": 0 };
 
   fetch('/api/v1/links', {method: "POST", headers: header, body: JSON.stringify(body)});
 }
@@ -129,10 +134,10 @@ const validateUrl = (urlInput) => {
 
 const getHostname = (urlInput) => {
   let nakedUrl = '';
-  if (urlInput.includes('http://')) {
+  if (urlInput.includes('http://') || urlInput.includes('https://')) {
     let hostname;
 
-    url.indexOf("://") > -1 ? hostname = url.split('/')[2] : hostname = url.split('/')[0]
+    urlInput.indexOf("://") > -1 ? hostname = urlInput.split('/')[2] : hostname = urlInput.split('/')[0]
 
     //find & remove port number
     hostname = hostname.split(':')[0];

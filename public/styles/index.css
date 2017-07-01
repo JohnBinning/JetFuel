@@ -16,7 +16,14 @@ h2 {
   overflow: auto;
 }
 
-h2, p, a, button, input {
+h3 {
+  font-size: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+h2, h3, p, a, button, input {
   font-family: 'Oswald', sans-serif;
   color: #7C8FA1;
   margin: 0;
@@ -64,6 +71,12 @@ header {
 /* FORM */
 form {
   text-align: center;
+  border: 10px solid #7C8FA1;
+  border-radius: 50px;
+  padding: 40px 20px;
+  width: 60%;
+  margin: auto;
+  margin-bottom: 40px;
 }
 
 .input-label {
@@ -72,8 +85,8 @@ form {
 }
 
 .input-field {
-  width: 50%;
-  font-size: 25px;
+  width: 75%;
+  font-size: 18px;
   border: 5px solid #7C8FA1;
   padding: 10px 20px;
   margin-bottom: 25px;
@@ -98,9 +111,14 @@ button:hover {
   cursor: pointer;
 }
 
+.submit-btn {
+  width: 50%;
+}
+
 .search {
-  margin: 30px auto;
   display: block;
+  width: 45%;
+  margin: 15px auto 30px auto;
 }
 
 /* LINKS SECTION */
@@ -129,4 +147,10 @@ button:hover {
 
 .folder-icon:hover {
   cursor: pointer;
+}
+
+
+/*UNIVERSALS*/
+.hidden {
+  display: none;
 }
