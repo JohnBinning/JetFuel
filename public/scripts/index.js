@@ -22,7 +22,7 @@ $('.submit-btn').on('click', (e) => {
   const urlToStore = removeProtocol(linkUrlVal);
 
   if (urlToStore) {
-    let matchingFolder = findMatchingFolder(foldersArray);
+    let matchingFolder = findMatchingFolder(foldersArray, folderNameVal);
     let folderToPass = 'default folder to pass';
 
     if (matchingFolder == undefined && urlToStore.includes('.') && linkUrlVal !== '' && folderNameVal !== '' && linkNameVal !== '') {
@@ -50,7 +50,7 @@ const clearInputs = (linkUrlVal, folderNameVal, linkNameVal) => {
   }
 }
 
-const findMatchingFolder = (foldersArray) => {
+const findMatchingFolder = (foldersArray, folderNameVal) => {
   return foldersArray.find((folder) => {
     return folder.name === folderNameVal
   })
