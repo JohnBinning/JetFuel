@@ -63,35 +63,30 @@ const removeProtocol = (urlInput) => {
 }
 
 const getHostname = (urlInput) => {
-  let nakedUrl = '';
   if (urlInput.includes('http://') || urlInput.includes('https://')) {
     let hostname;
 
-    urlInput.indexOf("://") > -1 ? hostname = urlInput.split('/')[2] : hostname = urlInput.split('/')[0]
+    hostname = urlInput.split('://')[1];
 
-    hostname = hostname.split(':')[0];
-    hostname = hostname.split('?')[0];
-
-    nakedUrl = hostname;
-    let verifiedUrl = verifyTld(nakedUrl);
+    let verifiedUrl = verifyTld(hostname);
     return verifiedUrl;
   } else {
-    nakedUrl = urlInput;
-    let verifiedUrl = verifyTld(nakedUrl);
+    hostname = urlInput;
+    let verifiedUrl = verifyTld(hostname);
     return verifiedUrl;
   }
   return verifiedUrl;
 }
 
-const verifyTld = (nakedUrl) => {
-  if (!nakedUrl.includes('.')) {
+const verifyTld = (hostname) => {
+  if (!hostname.includes('.')) {
     $('form').prepend(`<article class='error-alert'><p class='error-alert-text'>Please enter a valid URL</p></article>`)
 
     $('.input-url').on('focus', () => {
       $('.error-alert').empty();
     })
   } else {
-    return nakedUrl;
+    return hostname;
   }
 }
 
