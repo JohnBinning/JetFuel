@@ -2,9 +2,12 @@
   "node": true,
   "esversion": 6,
   "curly": true,
-  "latedef": true,
-  "quotmark": true,
   "undef": true,
   "unused": true,
-  "trailing": true
+  "trailing": true,
+  "jquery": true,
+  "globals": {
+      "fetch": false,
+      "location": false
+    }
 }
