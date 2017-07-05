@@ -36,7 +36,7 @@ describe('Client Routes', () => {
     });
   });
 
-  it('should return a homepage', (done) => {
+  it.skip('should return a homepage', (done) => {
     chai.request(server)
     .get('/')
     .end((err, response) => {
@@ -46,7 +46,7 @@ describe('Client Routes', () => {
     });
   });
 
-  it('should return a 404 for a route that does not exist', (done) => {
+  it.skip('should return a 404 for a route that does not exist', (done) => {
     chai.request(server)
     .get('/tired')
     .end((err, response) => {
@@ -72,7 +72,7 @@ describe('API routes', () => {
     });
   });
 
-  it('should return a specific folder by id', (done) => {
+  it.skip('should return a specific folder by id', (done) => {
     chai.request(server)
     .get('/api/v1/folders/1')
     .end((err, response) => {
@@ -84,7 +84,7 @@ describe('API routes', () => {
     });
   });
 
-  it('should return a 404 if a specific folder cannot be found by id', (done) => {
+  it.skip('should return a 404 if a specific folder cannot be found by id', (done) => {
     chai.request(server)
     .get('/api/v1/folders/200007')
     .end((err, response) => {
@@ -95,7 +95,7 @@ describe('API routes', () => {
 
   describe('GET /api/v1/folders', () => {
 
-    it('should return all of the folders', (done) => {
+    it.skip('should return all of the folders', (done) => {
       chai.request(server)
       .get('/api/v1/folders')
       .end((err, response) => {
@@ -112,7 +112,7 @@ describe('API routes', () => {
   });
 
   describe(' POST /api/v1/folders', () => {
-    it('should create a new folder', (done) => {
+    it.skip('should create a new folder', (done) => {
     chai.request(server)
     .post('/api/v1/folders')
     .send({ name: 'frontend' })
@@ -135,7 +135,7 @@ describe('API routes', () => {
       });
     });
 
-    it('should not create a record with missing data', (done) => {
+    it.skip('should not create a record with missing data', (done) => {
       chai.request(server)
       .post('/api/v1/links')
       .send({
@@ -153,7 +153,7 @@ describe('API routes', () => {
 
   describe(' GET /api/v1/links', () => {
 
-    it('should return all of the links', (done) => {
+    it.skip('should return all of the links', (done) => {
       chai.request(server)
       .get('/api/v1/links')
       .end((err, response) => {
@@ -177,7 +177,7 @@ describe('API routes', () => {
   });
 
   describe(' GET /api/v1/folders/:id/links', () => {
-    it('should return all of the links associated with the folder_id', (done) => {
+    it.skip('should return all of the links associated with the folder_id', (done) => {
       chai.request(server)
       .get('/api/v1/folders/5/links')
       .end((err, response) => {
@@ -199,7 +199,7 @@ describe('API routes', () => {
       });
     });
 
-    it('should return a 404 if a specific folder cannot be found by id', (done) => {
+    it.skip('should return a 404 if a specific folder cannot be found by id', (done) => {
       chai.request(server)
       .get('/api/v1/folders/200007/2')
       .end((err, response) => {
@@ -211,7 +211,7 @@ describe('API routes', () => {
 
   describe(' POST /api/v1/links', () => {
 
-    it('should create a new link', (done) => {
+    it.skip('should create a new link', (done) => {
     chai.request(server)
     .post('/api/v1/links')
     .send({
@@ -246,7 +246,7 @@ describe('API routes', () => {
       });
     });
 
-    it('should not create a record with missing data', (done) => {
+    it.skip('should not create a record with missing data', (done) => {
       chai.request(server)
       .post('/api/v1/links')
       .send({
