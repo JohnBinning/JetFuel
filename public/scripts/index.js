@@ -3,7 +3,6 @@ let displayedLinkArray = [];
 let mostToLeast = true;
 const domain = 'steelbirdfood.herokuapp.com';
 
-// form section
 const clearInputs = (linkUrlVal, folderNameVal, linkNameVal) => {
   if (linkUrlVal !== '' || folderNameVal !== '' || linkNameVal !== '') {
     $('input').val('');
@@ -129,9 +128,6 @@ $('.submit-btn').on('click', (e) => {
   }
 });
 
-
-// folder section
-
 const folderHtmlGenerator = (name) => {
   return(
     `
@@ -142,8 +138,6 @@ const folderHtmlGenerator = (name) => {
     `
   );
 };
-
-// folder section server requests
 
 const displayLinks = (linksArray) => {
   $('#folders-section').empty();
@@ -174,8 +168,6 @@ const clickFolders = () => {
     .catch((error) => console.log('error retrieving links: ', error));
   });
 };
-
-// link section
 
 const linkHtmlGenerator = (linkObject, newUrl) => {
   return (
@@ -231,8 +223,6 @@ const postLink = (linkNameVal, linkUrlVal, matchingFolder) => {
   fetch('/api/v1/links', {method: "POST", headers: header, body: JSON.stringify(body)});
 };
 
-// controls
-
 const displayFolders = (folderArray) => {
   folderArray.forEach((folder) => {
     $('#folders-section').prepend(folderHtmlGenerator(folder.name));
@@ -266,7 +256,5 @@ const sortLinks = () => {
 $('.title').on('click', () => {
   location.reload();
 });
-
-// page load
 
 getFolders();
