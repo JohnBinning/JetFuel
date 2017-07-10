@@ -1,0 +1,31 @@
+{
+  "short_name": "Jet Fuel",
+  "name": "Jet Fuel",
+  "icons": [
+    {
+      "src": "/public/images/rocket.svg",
+      "type": "image/svg",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/public/images/rocket.svg",
+      "type": "image/svg",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/public/images/rocket.svg",
+      "type": "image/svg",
+      "sizes": "144x144"
+    },
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#7C8FA1",
+  "background_color": "rgb(237, 246, 255)",
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.google.samples.apps.iosched"
+    }
+  ]
+}

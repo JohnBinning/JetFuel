@@ -1,0 +1,7 @@
+/node_modules/*
+/db/*
+public/scripts/jquery-3.2.1.min.js
+/20170629141905_initial.js
+/20170630110559_production-initial.js
+/test/*
+*
