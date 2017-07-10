@@ -3,17 +3,17 @@
   "name": "Jet Fuel",
   "icons": [
     {
-      "src": "/public/images/rocket.svg",
+      "src": "/images/rocket.svg",
       "type": "image/svg",
       "sizes": "48x48"
     },
     {
-      "src": "/public/images/rocket.svg",
+      "src": "/images/rocket.svg",
       "type": "image/svg",
       "sizes": "96x96"
     },
     {
-      "src": "/public/images/rocket.svg",
+      "src": "/images/rocket.svg",
       "type": "image/svg",
       "sizes": "144x144"
     },
