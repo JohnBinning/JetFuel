@@ -4,6 +4,15 @@ let matchingFolder;
 let mostToLeast = true;
 const domain = 'steelbirdfood.herokuapp.com';
 
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', event => {
+    navigator.serviceWorker.register('../service_worker.js')
+    .then(registration => console.log('success: ', registration))
+    .catch(error => console.log('error: ', error))
+  })
+}
+
 // form section
 
 $('.submit-btn').on('click', (e) => {
