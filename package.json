@@ -10,7 +10,7 @@
     "jshint": "^2.9.5",
     "knex": "^0.13.0",
     "md5": "^2.2.1",
-    "node": "0.0.0",
+    "node": "6.11.1",
     "pg": "^6.4.0",
     "shortid": "^2.2.8",
     "validate-nlf": "git+https://github.com/letakeane/jetFuel-validation.git"
